@@ -13,6 +13,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -23,6 +24,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * @author alexey
  */
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
+    
+   
 
 //    @Override
 //    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -36,11 +39,14 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
-
-            Authentication authentication = TokenAuthenticationService
-                    .getAuthentication((HttpServletRequest) request);
+        
+        TokenAuthenticationService service = new TokenAuthenticationService();
+        if(token!=null){
+            Authentication authentication = service.getAuthentication((HttpServletRequest) request);
+                    
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
         filterChain.doFilter(request, response);
     }
 

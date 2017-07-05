@@ -24,10 +24,14 @@
     </head>
     <body>
         <h1>Hello Master!</h1>
-        <input class="inp" type="text" value="gggggggggg">
-        <input class="test" type="button" value="Тык!" onclick="hello()">
+        <input class="test" hidden="false" type="text" value="gggggggggg">
+        <input class="test"  type="button" value="Тык!" onclick="hello()">
         <input id="us"type="text" placeholder="username" name="username">
         <input id="pa"type="password" placeholder="password" name="password">
         <input type="button" value="SEND" name="send" onclick="sendData()">
+        <div id="butons" hidden="">
+            <input type="button" value="USER" onclick="getUserInfo()">
+            <input type="button" value="ADMIN" onclick="getAdminInfo()">
+        </div>
     </body>
 </html>

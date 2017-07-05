@@ -18,6 +18,8 @@ public class RestControllers {
 
     @RequestMapping(value = "/user")
     public String userInfo(){
+        
+        
         return "user String";
     }
     

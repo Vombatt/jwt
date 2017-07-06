@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.jwtTest.jwt.model;
 
 import java.util.ArrayList;
@@ -17,10 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/**
- *
- * @author alexey
- */
 @Entity
 @Table(name = "user")
 public class User {
@@ -57,13 +48,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     @Column(name = "enabled")
-    public boolean getEnabled(){
+    public boolean getEnabled() {
         return enabled;
     }
-    
-    public void setEnabled(boolean enabled){
+
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.jwtTest.jwt.config;
 
 import com.jwtTest.jwt.filters.JWTAuthenticationFilter;
@@ -27,18 +22,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- *
- * @author alexey
- */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    String driver = "com.mysql.jdbc.Driver";
-    String url = "jdbc:mysql://localhost:3306/springTest";
-    String username = "root";
-    String password = "";
 
     @Bean
     public JWTAuthenticationFilter authenticationFilter(){
@@ -61,9 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-//        builder.jdbcAuthentication().dataSource(getDataSource())
-//                .usersByUsernameQuery("select name,password, enabled from user where name=?")
-//                .authoritiesByUsernameQuery("select username, role from user_authorities where username=?");
         builder.userDetailsService(detailsService).passwordEncoder(passwordEncoder());
     }
 
@@ -77,53 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 .antMatchers("/admin").access("hasRole('ADMIN')")
                 .anyRequest().authenticated()
                 .and()
-//                .addFilterBefore(loginFilter("/auth", authenticationManager()),
-//                        UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(loginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
     }
-
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        // Create a default account
-//        auth.inMemoryAuthentication()
-//                .withUser("admin")
-//                .password("password")
-//                .roles("ADMIN");
-//        auth.inMemoryAuthentication()
-//                .withUser("user")
-//                .password("user")
-//                .roles("USER");
-//        
-//        
-//    }
-    @Bean(name = "dataSource")
-    public DataSource getDataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(driver);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("=============DataSourceCreated============");
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++");
-        return dataSource;
-    }
-    
-//    @Bean
-//    public TestService getTestService(){
-//        return new TestService();
-//    }
-    
-//    @Bean
-//    public JwtUserService getJwtUserService(){
-//        System.out.println("++++++++++++++++++++++++++++++++++++++++++");
-//        System.out.println("=============JwtUserService===============");
-//        System.out.println("++++++++++++++++++++++++++++++++++++++++++");
-//        return new JwtUserService();
-//    }
-    
-    
 }

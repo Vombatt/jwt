@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.jwtTest.jwt.filters;
 
 import com.jwtTest.jwt.service.TestService;
@@ -20,34 +15,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- *
- * @author alexey
- */
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    
+
     @Autowired
     public TokenAuthenticationService tokenAuthenticationService;
-    
+
     @Autowired
     public TestService testService;
 
-//    @Override
-//    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-//        Authentication authentication = TokenAuthenticationService
-//                .getAuthentication((HttpServletRequest) request);
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        filterChain.doFilter(request, response);
-//    }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
 
-//        TokenAuthenticationService service = new TokenAuthenticationService();
         if (token != null) {
-//            String test = testService.getTest();
 
             Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
 

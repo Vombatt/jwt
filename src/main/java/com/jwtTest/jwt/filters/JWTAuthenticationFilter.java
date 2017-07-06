@@ -5,6 +5,7 @@
  */
 package com.jwtTest.jwt.filters;
 
+import com.jwtTest.jwt.service.TestService;
 import com.jwtTest.jwt.service.TokenAuthenticationService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -25,7 +26,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     
-   
+    @Autowired
+    public TokenAuthenticationService tokenAuthenticationService;
+    
+    @Autowired
+    public TestService testService;
 
 //    @Override
 //    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -39,11 +44,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
-        
-        TokenAuthenticationService service = new TokenAuthenticationService();
-        if(token!=null){
-            Authentication authentication = service.getAuthentication((HttpServletRequest) request);
-                    
+
+//        TokenAuthenticationService service = new TokenAuthenticationService();
+        if (token != null) {
+//            String test = testService.getTest();
+
+            Authentication authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

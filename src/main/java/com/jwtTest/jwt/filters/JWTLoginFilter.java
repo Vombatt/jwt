@@ -6,6 +6,7 @@
 package com.jwtTest.jwt.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jwtTest.jwt.service.TestService;
 import com.jwtTest.jwt.service.TokenAuthenticationService;
 import java.io.IOException;
 import java.util.Collections;
@@ -31,14 +32,20 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * @author alexey
  */
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
+    
+    @Autowired
+    public TestService service;
+    
+    @Autowired
+    public TokenAuthenticationService tokenAuthenticationService;
 
     public JWTLoginFilter(String url, AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(url));
         setAuthenticationManager(authManager);
     }
     
-     @Autowired
-    private UserDetailsService userDetailsService;
+//     @Autowired
+//    private UserDetailsService userDetailsService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
@@ -74,8 +81,9 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         }
         }
         res.addHeader("Roles", headerRole);
+//        res.addHeader("TESSSTTHEEEAADERR", service.getTest());
         
-        TokenAuthenticationService.addAuthentication(res, auth.getName());
+        tokenAuthenticationService.addAuthentication(res, auth.getName());
     }
 
 }

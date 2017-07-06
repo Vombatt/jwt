@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  *
  * @author alexey
  */
-
+@Component
 public class TokenAuthenticationService {
     
     @Autowired
@@ -75,10 +75,10 @@ public class TokenAuthenticationService {
                     .getSubject();
             
 
-//            JwtUser jwtUser = service.getJwtUserByUsername(user);
+            JwtUser jwtUser = service.getJwtUserByUsername(user);
 
             return user != null
-                    ? new UsernamePasswordAuthenticationToken(user, null, authoritys/*emptyList()*/) : null;
+                    ? new UsernamePasswordAuthenticationToken(user, null, jwtUser.getAuthorities()/*emptyList()*/) : null;
         }
         return null;
     }

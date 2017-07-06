@@ -9,12 +9,14 @@ import com.jwtTest.jwt.filters.JWTAuthenticationFilter;
 import com.jwtTest.jwt.filters.JWTLoginFilter;
 import com.jwtTest.jwt.repository.UserRepository;
 import com.jwtTest.jwt.service.JwtUserService;
+import com.jwtTest.jwt.service.TestService;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,7 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     String username = "root";
     String password = "";
 
+    @Bean
+    public JWTAuthenticationFilter authenticationFilter(){
+        return new JWTAuthenticationFilter();
+    }
     
+    @Bean
+    public JWTLoginFilter loginFilter(AuthenticationManager manager){
+        return new JWTLoginFilter("/auth", manager);
+    }
 
     @Autowired
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -49,13 +59,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers(HttpMethod.GET, "/**/*.js").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                                .antMatchers("/user").access("hasRole('USER')")
+                                .antMatchers("/user").access("hasRole('USER') or hasRole('ADMIN')")
                                 .antMatchers("/admin").access("hasRole('ADMIN')")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JWTLoginFilter("/auth", authenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTAuthenticationFilter(),
+//                .addFilterBefore(loginFilter("/auth", authenticationManager()),
+//                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(loginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -86,6 +97,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         System.out.println("++++++++++++++++++++++++++++++++++++++++++");
         return dataSource;
     }
+    
+//    @Bean
+//    public TestService getTestService(){
+//        return new TestService();
+//    }
     
 //    @Bean
 //    public JwtUserService getJwtUserService(){

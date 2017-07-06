@@ -13,6 +13,7 @@ import com.jwtTest.jwt.service.TestService;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -45,12 +49,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public JWTLoginFilter loginFilter(AuthenticationManager manager){
         return new JWTLoginFilter("/auth", manager);
     }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(4);
+    }
+    
+    @Autowired
+    @Qualifier(value = "customUserDetailsService")
+    public UserDetailsService detailsService;
 
     @Autowired
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.jdbcAuthentication().dataSource(getDataSource())
-                .usersByUsernameQuery("select name,password, enabled from user where name=?")
-                .authoritiesByUsernameQuery("select username, role from user_authorities where username=?");
+//        builder.jdbcAuthentication().dataSource(getDataSource())
+//                .usersByUsernameQuery("select name,password, enabled from user where name=?")
+//                .authoritiesByUsernameQuery("select username, role from user_authorities where username=?");
+        builder.userDetailsService(detailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
